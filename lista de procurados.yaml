@@ -1,0 +1,114 @@
+swagger: '2.0'
+info:
+  title: API dos Procurados do FBI
+  description: API para obter informações sobre os procurados do FBI
+  version: "1.0"
+host: api.fbi.gov
+basePath: /wanted/v1
+schemes:
+  - https
+paths:
+  /list:
+    get:
+      summary: Obter a lista de procurados
+      produces:
+        - application/json
+      responses:
+        200:
+          description: Lista de procurados retornada com sucesso
+          schema:
+            $ref: '#/definitions/ProcuradosResponse'
+        default:
+          description: Erro ao obter a lista de procurados
+  /search/id/{id}:
+    get:
+      summary: Buscar um procurado pelo ID
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: path
+          description: ID do procurado
+          required: true
+          type: integer
+      responses:
+        200:
+          description: Procurado encontrado
+          schema:
+            $ref: '#/definitions/Procurado'
+        404:
+          description: Procurado não encontrado
+  /search/name/{name}:
+    get:
+      summary: Buscar um procurado pelo nome
+      produces:
+        - application/json
+      parameters:
+        - name: name
+          in: path
+          description: Nome do procurado
+          required: true
+          type: string
+      responses:
+        200:
+          description: Procurado encontrado
+          schema:
+            $ref: '#/definitions/Procurado'
+        404:
+          description: Procurado não encontrado
+  /search/nationality/{nationality}:
+    get:
+      summary: Buscar procurados por nacionalidade
+      produces:
+        - application/json
+      parameters:
+        - name: nationality
+          in: path
+          description: Nacionalidade dos procurados
+          required: true
+          type: string
+      responses:
+        200:
+          description: Lista de procurados encontrada
+          schema:
+            $ref: '#/definitions/ProcuradosResponse'
+        404:
+          description: Nenhum procurado encontrado
+  /search/crime/{crime}:
+    get:
+      summary: Buscar procurados por tipo de crime
+      produces:
+        - application/json
+      parameters:
+        - name: crime
+          in: path
+          description: Tipo de crime dos procurados
+          required: true
+          type: string
+      responses:
+        200:
+          description: Lista de procurados encontrada
+          schema:
+            $ref: '#/definitions/ProcuradosResponse'
+        404:
+          description: Nenhum procurado encontrado
+definitions:
+  Procurado:
+    type: object
+    properties:
+      title:
+        type: string
+        description: Nome do procurado
+      description:
+        type: string
+        description: Descrição do procurado
+      reward_text:
+        type: string
+        description: Recompensa oferecida
+  ProcuradosResponse:
+    type: object
+    properties:
+      items:
+        type: array
+        items:
+          $ref: '#/definitions/Procurado'
